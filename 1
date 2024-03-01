@@ -3,62 +3,125 @@
 #include <cstdlib>
 
 template <typename T>
-void FullArray(T arr[], T size) {
-	srand(time(0));
+void FullArray(T arr[], T size) { //функция для заполнения массива рандомными элементами
+	srand(time(0)); //инициализация рандомайзера
 	for (int i = 0; i < size; i++) {
-		arr[i] = rand() % 10000;
+		arr[i] = rand() % 10000; //рандомные число до 10000
 	}
 }
 
 template <typename T>
-T ShowArray(T arr[], T size) {
+void ShowArray(T arr[], T size) { //функция для вывода массива на экран
 	for (int i = 0; i < size; i++) {
 		std::cout << arr[i] << ' ';
 	}
 }
 
 template <typename T>
-T RandomPivot(T min, T max) {
+T RandomPivot(T min, T max) { //выборка рандомного пивота для Quick Sort
 	srand(time(0));
 	return min + rand() % (max - min + 1);
 }
 
 template <typename T>
-void QuickSort(T array[], int min, int max) {
-	if (min < max) { 
-		int piInd = RandomPivot(min, max);
-		T pivot = array[piInd];
-		std::swap(array[piInd], array[max]);
-		int i = min - 1;
-		for (int j = min; j < max; j++) 
+void QuickSort(T array[], int min, int max) { //функция для quick sort
+	if (min < max) { //задаем условия для рекурсии
+		int piInd = RandomPivot(min, max); //берем рандомный пивот из функции выше (индекс пивота)
+		T pivot = array[piInd]; //считываем сам пивот по индексу 
+		std::swap(array[piInd], array[max]); //ставим пивот на место последнего элемента в array
+		int i = min - 1; //задаем индекс для следующей "переменки" местами элементов 
+		for (int j = min; j < max; j++) // проходимся по всем элементам массива
 		{
-			if (array[j] < pivot) 
+			if (array[j] < pivot) //сверяем элемент массива с пивотом, чтобы выбрать элементы, которые будут слева от пивота
 			{
 				i++;
-				std::swap(array[i], array[j]); 
+				std::swap(array[i], array[j]); //меняем местами найденный меньший чем пивот элемент и меняем с элементом, для которого создали ранее индекс
 			}
 		}
-		std::swap(array[i + 1], array[max]); 
-		QuickSort(array, min, i); 
-		QuickSort(array, i + 2, max); 
+		std::swap(array[i + 1], array[max]); //теперь ставим пивот между элементами, которые меньше и теми, которые больше (суть quick sort именно в этом)
+		QuickSort(array, min, i); //создаем рекурсию и повторяем функцию для элементов слева от пивота (те, что меньше)
+		QuickSort(array, i + 2, max); //создаем рекурсию и повторяем функцию для элементов справа от пивота (те, что больше)
 	}
 }
 
+template <typename T>
+void BubbleSort(T arr[], T size) //функция для bubblr sort
+{
+	for (int i = 0; i < size - 1; i++) //проходим по элементам до предпоследнего
+	{
+		for (int j = 0; j < size - i - 1; j++) //создаем "вторую" проходку по элементам, дабы менять соседние элементы местами
+		{
+			if (arr[j] > arr[j + 1]) { //сама функция замены соседних элементов
+				int b = arr[j];
+				arr[j] = arr[j + 1];
+				arr[j + 1] = b;
+			}
+		}
+	}
+}
 
+template <typename T>
+void SelectionSort(T arr[], T size) //функция для Selection Sort
+{
+	for (int i = 0; i < size - 1; i++) //проходим по элементам до предпоследнего 
+	{
+		int minIndex = i; //нам нужно будет фиксировать наименьший элемент и каждый наименьший переставлять в начало, для этого создаем первый индекс для сравнения
+		for (int j = i + 1; j < size; j++) { //создаем for для сравнения двух элементов
+			if (arr[j] < arr[minIndex]) {
+				minIndex = j; //сохраняем индекс того элемента, который является наименьшим
+			}
+		}
+		if (minIndex != 1) { //меняем значения элемента i и элемента minIndex, таким образом переставляя те, что меньше левее
+			int b = arr[i];
+			arr[i] = arr[minIndex];
+			arr[minIndex] = b;
+		}
+	}
+}
 
 int main()
 {
-	const int sizeArray = 15;
-	int Array[sizeArray];
+	const int sizeArray = 10; //создаем констаное значения, для массива
+	int Array[sizeArray]; //создаем массив 
 
-	FullArray(Array, sizeArray);
+	FullArray(Array, sizeArray); //вызываем функцию для создания элементов массива 
 	std::cout << "Origin Array = ";
-	ShowArray(Array, sizeArray);
+	ShowArray(Array, sizeArray); //вывод массива первоначального вида
 	{
-		/*QuickSort*/
-		QuickSort(Array, 0, sizeArray);
-		std::cout << "1. QuickSort Array = ";
-		ShowArray(Array, sizeArray);
+		/*Quick Sort*/
+		unsigned int start_time = clock(); //запускаем таймер
+
+		QuickSort(Array, 0, sizeArray - 1); //вызов функции для quick sort
+		std::cout << "\n1. Quick Sort Array = ";
+		ShowArray(Array, sizeArray); //вывод отсортированного массива
+
+		unsigned int end_time = clock(); //тормозим счетчик
+		unsigned int search_time = end_time - start_time; //переменная для высчитывания времени
+		std::cout << "\nTime for Quick Sort = " << search_time; //показываем время 
+	}
+	{
+		/*Bubble sort*/
+		unsigned int start_time = clock(); //запускаем таймер
+
+		BubbleSort(Array, sizeArray); //функция для сортировки bubble sort
+		std::cout << "\n2. BubbleSort Array = ";
+		ShowArray(Array, sizeArray); //вывод отсортированного массива
+
+		unsigned int end_time = clock(); //тормозим счетчик
+		unsigned int search_time = end_time - start_time; //переменная для высчитывания времени
+		std::cout << "\nTime for Bubble Sort = " << search_time; //показываем время
+	}
+	{
+		/*Selection Sort*/
+		unsigned int start_time = clock(); //запускаем таймер
+
+		SelectionSort(Array, sizeArray); //функция для сортировки selection sort
+		std::cout << "\n2. Selection Sort Array = ";
+		ShowArray(Array, sizeArray); //вывод отсортированного массива
+
+		unsigned int end_time = clock(); //тормозим счетчик
+		unsigned int search_time = end_time - start_time;
+		std::cout << "\nTime for Selection Sort = " << search_time; //показываем время
 	}
 
 	return 0;
