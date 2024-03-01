@@ -1,0 +1,65 @@
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
+
+template <typename T>
+void FullArray(T arr[], T size) {
+	srand(time(0));
+	for (int i = 0; i < size; i++) {
+		arr[i] = rand() % 10000;
+	}
+}
+
+template <typename T>
+T ShowArray(T arr[], T size) {
+	for (int i = 0; i < size; i++) {
+		std::cout << arr[i] << ' ';
+	}
+}
+
+template <typename T>
+T RandomPivot(T min, T max) {
+	srand(time(0));
+	return min + rand() % (max - min + 1);
+}
+
+template <typename T>
+void QuickSort(T array[], int min, int max) {
+	if (min < max) { 
+		int piInd = RandomPivot(min, max);
+		T pivot = array[piInd];
+		std::swap(array[piInd], array[max]);
+		int i = min - 1;
+		for (int j = min; j < max; j++) 
+		{
+			if (array[j] < pivot) 
+			{
+				i++;
+				std::swap(array[i], array[j]); 
+			}
+		}
+		std::swap(array[i + 1], array[max]); 
+		QuickSort(array, min, i); 
+		QuickSort(array, i + 2, max); 
+	}
+}
+
+
+
+int main()
+{
+	const int sizeArray = 15;
+	int Array[sizeArray];
+
+	FullArray(Array, sizeArray);
+	std::cout << "Origin Array = ";
+	ShowArray(Array, sizeArray);
+	{
+		/*QuickSort*/
+		QuickSort(Array, 0, sizeArray);
+		std::cout << "1. QuickSort Array = ";
+		ShowArray(Array, sizeArray);
+	}
+
+	return 0;
+}
