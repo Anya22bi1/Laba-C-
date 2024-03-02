@@ -47,7 +47,7 @@ void QuickSort(T array[], int min, int max) { //функция для quick sort
 template <typename T>
 void BubbleSort(T arr[], T size) //функция для bubblr sort
 {
-	for (int i = 0; i < size - 1; i++) //проходим по элементам до предпоследнего
+	for (int i = 0; i < size - 1; i++) //проходим по всем элементам 
 	{
 		for (int j = 0; j < size - i - 1; j++) //создаем "вторую" проходку по элементам, дабы менять соседние элементы местами
 		{
@@ -63,7 +63,7 @@ void BubbleSort(T arr[], T size) //функция для bubblr sort
 template <typename T>
 void SelectionSort(T arr[], T size) //функция для Selection Sort
 {
-	for (int i = 0; i < size - 1; i++) //проходим по элементам до предпоследнего 
+	for (int i = 0; i < size - 1; i++) //проходим по всем элементам 
 	{
 		int minIndex = i; //нам нужно будет фиксировать наименьший элемент и каждый наименьший переставлять в начало, для этого создаем первый индекс для сравнения
 		for (int j = i + 1; j < size; j++) { //создаем for для сравнения двух элементов
